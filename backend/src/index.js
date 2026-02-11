@@ -4,7 +4,7 @@ const cors = require("cors");
 const { db } = require("./firebase");
 const userRoutes = require("./routes/users");
 const { checkInactivity } = require("./jobs/inactivityCheck");
-
+const { logToBlockchain } = require("./blockchain/logger");
 
 
 const app = express();
@@ -35,3 +35,10 @@ app.listen(PORT, () => {
 setInterval(() => {
   checkInactivity().catch(console.error);
 }, 5 * 60 * 1000);
+logToBlockchain(
+  "TEST_BACKEND_CONNECTED",
+  "system",
+  "render"
+).catch(err => {
+  console.error("Blockchain error:", err.message);
+});
