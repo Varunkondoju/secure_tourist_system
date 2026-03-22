@@ -1,5 +1,6 @@
 const { ethers } = require("ethers");
 
+
 const provider = new ethers.JsonRpcProvider(
   process.env.SEPOLIA_RPC_URL
 );
@@ -29,3 +30,4 @@ async function logToBlockchain(action, userHash, actorHash) {
 }
 
 module.exports = { logToBlockchain };
+console.log("Wallet address:", wallet.address);

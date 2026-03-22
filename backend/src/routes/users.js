@@ -90,6 +90,26 @@ router.post("/register", async (req, res) => {
   }
 });
 
+router.post("/activity", async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ message: "Missing userId" });
+    }
+
+    await db.collection("users").doc(userId).update({
+      lastActiveAt: new Date(),
+      emergencyActive: false
+    });
+
+    res.json({ message: "Activity updated" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to update activity" });
+  }
+});
+
 module.exports = router;
 // 🚨 User presses SOS
 router.post("/sos", async (req, res) => {
@@ -135,5 +155,36 @@ router.post("/heartbeat", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Heartbeat failed" });
+  }
+});
+
+const { decrypt } = require("../security/crypto");
+
+router.get("/admin/:id", async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const doc = await db.collection("users").doc(userId).get();
+
+    if (!doc.exists) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const data = doc.data();
+
+    // Decrypt Aadhaar
+    const aadhaar = decrypt(
+      data.aadhaar_enc,
+      process.env.PII_SECRET
+    );
+
+    res.json({
+      ...data,
+      aadhaar
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch user" });
   }
 });

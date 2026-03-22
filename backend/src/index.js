@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const { db } = require("./firebase");
 const userRoutes = require("./routes/users");
+const emergencyRoutes = require("./routes/emergency");
 const { checkInactivity } = require("./jobs/inactivityCheck");
 const { logToBlockchain } = require("./blockchain/logger");
 
@@ -11,6 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/api/users", userRoutes);
+app.use("/api/emergency", emergencyRoutes);
 
 
 app.get("/", async (req, res) => {
