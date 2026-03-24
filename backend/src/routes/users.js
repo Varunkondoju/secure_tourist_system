@@ -3,90 +3,63 @@ const router = express.Router();
 const { db } = require("../firebase");
 const { encrypt, hashPII } = require("../security/crypto");
 
+const bcrypt = require("bcrypt");
+
 router.post("/register", async (req, res) => {
   try {
     const {
       preferredName,
+      fullName,
       phone,
       email,
       aadhaar,
-      emergencyContact
+      emergencyContact,
+      emergencyContactRelation,
+      password
     } = req.body;
 
-    // 🔴 Basic validation
-    if (!preferredName || !phone || !email || !aadhaar || !emergencyContact) {
+    // Basic validation
+    if (!email || !password || !fullName) {
       return res.status(400).json({
-        message: "Missing required registration fields"
+        message: "Full name, email and password are required"
       });
     }
 
-    // 🔍 Check duplicate phone
-    const phoneCheck = await db
-      .collection("users")
-      .where("phone", "==", phone)
-      .get();
-
-    if (!phoneCheck.empty) {
-      return res.status(409).json({
-        message: "Phone number already registered"
-      });
-    }
-
-    // 🔍 Check duplicate email
-    const emailCheck = await db
-      .collection("users")
+    // Check existing user
+    const existing = await db.collection("users")
       .where("email", "==", email)
       .get();
 
-    if (!emailCheck.empty) {
-      return res.status(409).json({
-        message: "Email already registered"
-      });
+    if (!existing.empty) {
+      return res.status(400).json({ message: "User already exists" });
     }
 
-    // 🔍 Hash Aadhaar for uniqueness check
-    const aadhaarHash = hashPII(aadhaar);
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const aadhaarCheck = await db
-      .collection("users")
-      .where("aadhaar_hash", "==", aadhaarHash)
-      .get();
-
-    if (!aadhaarCheck.empty) {
-      return res.status(409).json({
-        message: "Aadhaar already registered"
-      });
-    }
-
-    // 🔐 Encrypt Aadhaar for secure storage
-    const encryptedAadhaar = encrypt(aadhaar, process.env.PII_SECRET);
-
-    // ✅ Create user
-    const docRef = await db.collection("users").add({
+    // Save user
+    const userRef = await db.collection("users").add({
       preferredName,
+      fullName,
       phone,
       email,
-
-      aadhaar_enc: encryptedAadhaar,
-      aadhaar_hash: aadhaarHash,
-
+      aadhaar,
       emergencyContact,
-
+      emergencyContactRelation,
+      password: hashedPassword,
       createdAt: new Date(),
-      lastActiveAt: new Date(),
-      sosActive: false,
+      lastActive: new Date(),
       emergencyActive: false
     });
 
-    res.status(201).json({
-      message: "User registered securely",
-      userId: docRef.id
+    res.json({
+      message: "User registered successfully",
+      userId: userRef.id
     });
+
   } catch (err) {
     console.error(err);
-    res.status(500).json({
-      message: "Registration failed"
-    });
+    res.status(500).json({ message: "Register failed" });
   }
 });
 
@@ -191,31 +164,37 @@ router.get("/admin/:id", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
-    const { phone } = req.body;
+    const { email, password } = req.body;
 
-    if (!phone) {
-      return res.status(400).json({ message: "Phone is required" });
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email & password required" });
     }
 
-    // Check user in Firebase
-    const userRef = db.collection("users").where("phone", "==", phone);
-    const snapshot = await userRef.get();
+    const snapshot = await db.collection("users")
+      .where("email", "==", email)
+      .get();
 
     if (snapshot.empty) {
       return res.status(404).json({ message: "User not found" });
     }
 
     const userDoc = snapshot.docs[0];
-    const userData = userDoc.data();
+    const user = userDoc.data();
+
+    // Compare password
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid password" });
+    }
 
     res.json({
       message: "Login successful",
-      userId: userDoc.id,
-      user: userData
+      userId: userDoc.id
     });
 
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Login failed" });
   }
 });
