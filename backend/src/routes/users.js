@@ -188,3 +188,35 @@ router.get("/admin/:id", async (req, res) => {
     res.status(500).json({ message: "Failed to fetch user" });
   }
 });
+
+router.post("/login", async (req, res) => {
+  try {
+    const { phone } = req.body;
+
+    if (!phone) {
+      return res.status(400).json({ message: "Phone is required" });
+    }
+
+    // Check user in Firebase
+    const userRef = db.collection("users").where("phone", "==", phone);
+    const snapshot = await userRef.get();
+
+    if (snapshot.empty) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userDoc = snapshot.docs[0];
+    const userData = userDoc.data();
+
+    res.json({
+      message: "Login successful",
+      userId: userDoc.id,
+      user: userData
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Login failed" });
+  }
+});
+module.exports=router;
