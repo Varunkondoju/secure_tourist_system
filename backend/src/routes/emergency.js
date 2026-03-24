@@ -34,4 +34,29 @@ router.post("/sos", async (req, res) => {
   }
 });
 
+router.post("/sos", async (req, res) => {
+  try {
+    const { userId, location } = req.body;
+
+    if (!userId || !location) {
+      return res.status(400).json({ message: "Missing fields" });
+    }
+
+    const sosRef = await db.collection("sos").add({
+      userId,
+      location,
+      status: "ACTIVE",
+      createdAt: new Date()
+    });
+
+    res.json({
+      message: "SOS triggered",
+      sosId: sosRef.id
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "SOS failed" });
+  }
+});
 module.exports = router;

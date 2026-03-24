@@ -199,4 +199,18 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Login failed" });
   }
 });
+router.put("/update/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const updates = req.body;
+
+    await db.collection("users").doc(userId).update(updates);
+
+    res.json({ message: "Profile updated successfully" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Update failed" });
+  }
+});
 module.exports=router;
