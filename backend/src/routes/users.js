@@ -181,7 +181,7 @@ router.post("/login", async (req, res) => {
     const userDoc = snapshot.docs[0];
     const user = userDoc.data();
 
-    // Compare password
+    // 🔥 IMPORTANT
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
@@ -190,7 +190,8 @@ router.post("/login", async (req, res) => {
 
     res.json({
       message: "Login successful",
-      userId: userDoc.id
+      userId: userDoc.id,
+      user : userDoc.data()
     });
 
   } catch (err) {
