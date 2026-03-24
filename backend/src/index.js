@@ -7,6 +7,7 @@ const emergencyRoutes = require("./routes/emergency");
 const { checkInactivity } = require("./jobs/inactivityCheck");
 const { logToBlockchain } = require("./blockchain/logger");
 const efirRoutes=require("./routes/efir");
+const tripRoutes = require("./routes/trips");
 
 
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use("/api/users", userRoutes);
 app.use("/api/emergency", emergencyRoutes);
 app.use("/api/efir",efirRoutes);
+app.use("/api/trips",tripRoutes);
 
 
 app.get("/", async (req, res) => {
