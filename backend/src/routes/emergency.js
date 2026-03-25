@@ -8,40 +8,13 @@ router.post("/sos", async (req, res) => {
   try {
     const { userId, location } = req.body;
 
-    if (!userId) {
-      return res.status(400).json({ message: "Missing userId" });
-    }
-
-    // Update Firebase
-    await db.collection("users").doc(userId).update({
-      emergencyActive: true,
-      lastLocation: location || null,
-      lastActiveAt: new Date()
-    });
-
-    // Log to blockchain
-    await logToBlockchain(
-      "EMERGENCY_TRIGGERED",
-      hashPII(userId),
-      "user"
-    );
-
-    res.json({ message: "SOS triggered successfully" });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "SOS failed" });
-  }
-});
-
-router.post("/sos", async (req, res) => {
-  try {
-    const { userId, location } = req.body;
-
     if (!userId || !location) {
       return res.status(400).json({ message: "Missing fields" });
     }
 
+    console.log("SOS HIT:", userId, location);
+
+    // ✅ Save SOS separately (MAIN FEATURE)
     const sosRef = await db.collection("sos").add({
       userId,
       location,
@@ -49,14 +22,36 @@ router.post("/sos", async (req, res) => {
       createdAt: new Date()
     });
 
+    // ⚠️ OPTIONAL: update user (ONLY if valid ID)
+    try {
+      await db.collection("users").doc(userId).update({
+        emergencyActive: true,
+        lastLocation: location,
+        lastActiveAt: new Date()
+      });
+    } catch (e) {
+      console.log("User update skipped (invalid userId)");
+    }
+
+    // ✅ Blockchain log
+    await logToBlockchain(
+      "EMERGENCY_TRIGGERED",
+      hashPII(userId),
+      "user"
+    );
+
     res.json({
-      message: "SOS triggered",
+      message: "SOS triggered successfully",
       sosId: sosRef.id
     });
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "SOS failed" });
+    console.error("SOS ERROR:", err);
+    res.status(500).json({
+      message: "SOS failed",
+      error: err.message
+    });
   }
 });
+
 module.exports = router;
