@@ -20,7 +20,7 @@ router.post("/register", async (req, res) => {
       email,
       aadhaar,
       emergencyContact,
-      relation,
+      relationemergencyContactRelation,
       password
     } = req.body;
 
@@ -50,7 +50,7 @@ router.post("/register", async (req, res) => {
       email,
       aadhaar,
       emergencyContact,
-      relation,
+      emergencyContactRelation:relationemergencyContactRelation || "",
       password: hashedPassword,
       digitalId, // 🔥 IMPORTANT
       createdAt: new Date()
