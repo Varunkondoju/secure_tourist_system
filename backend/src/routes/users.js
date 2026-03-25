@@ -5,27 +5,30 @@ const { encrypt, hashPII } = require("../security/crypto");
 
 const bcrypt = require("bcrypt");
 
+// 🔥 add this function ABOVE register
+function generateDigitalId(aadhaar) {
+  const last4 = aadhaar.slice(-4);
+  const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+  return `IND-${last4}-${random}`;
+}
+
 router.post("/register", async (req, res) => {
   try {
     const {
       preferredName,
-      fullName,
       phone,
       email,
       aadhaar,
       emergencyContact,
-      emergencyContactRelation,
+      relation,
       password
     } = req.body;
 
-    // Basic validation
-    if (!email || !password || !fullName) {
-      return res.status(400).json({
-        message: "Full name, email and password are required"
-      });
+    if (!email || !password || !aadhaar) {
+      return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // Check existing user
+    // 🔍 check existing user
     const existing = await db.collection("users")
       .where("email", "==", email)
       .get();
@@ -34,27 +37,29 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // Hash password
+    // 🔐 hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Save user
+    // 🆔 generate digital ID
+    const digitalId = generateDigitalId(aadhaar);
+
+    // 💾 save user
     const userRef = await db.collection("users").add({
       preferredName,
-      fullName,
       phone,
       email,
       aadhaar,
       emergencyContact,
-      emergencyContactRelation,
+      relation,
       password: hashedPassword,
-      createdAt: new Date(),
-      lastActive: new Date(),
-      emergencyActive: false
+      digitalId, // 🔥 IMPORTANT
+      createdAt: new Date()
     });
 
     res.json({
-      message: "User registered successfully",
-      userId: userRef.id
+      message: "User registered",
+      userId: userRef.id,
+      digitalId // 🔥 send back
     });
 
   } catch (err) {
@@ -227,3 +232,8 @@ router.put("/update/:userId", async (req, res) => {
   }
 });
 module.exports=router;
+function generateDigitalId(aadhaar) {
+  const last4 = aadhaar.slice(-4);
+  const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+  return `IND-${last4}-${random}`;
+}

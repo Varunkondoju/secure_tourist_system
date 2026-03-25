@@ -35,9 +35,9 @@ router.post("/sos", async (req, res) => {
 
     // ✅ Blockchain log
     await logToBlockchain(
-      "EMERGENCY_TRIGGERED",
-      hashPII(userId),
-      "user"
+     "EMERGENCY_TRIGGERED",
+     digitalId, // 🔥 USE DIGITAL ID
+     "user"
     );
 
     res.json({
