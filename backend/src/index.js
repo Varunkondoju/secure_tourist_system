@@ -8,7 +8,6 @@ const { checkInactivity } = require("./jobs/inactivityCheck");
 const { logToBlockchain } = require("./blockchain/logger");
 const efirRoutes=require("./routes/efir");
 const tripRoutes = require("./routes/trips");
-const { checkInactivity } = require("./jobs/checkInactivity");
 
 
 
