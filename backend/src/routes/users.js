@@ -204,13 +204,26 @@ router.put("/update/:userId", async (req, res) => {
     const { userId } = req.params;
     const updates = req.body;
 
-    await db.collection("users").doc(userId).update(updates);
+    console.log("UPDATE REQUEST:", userId, updates); // debug
+
+    const userRef = db.collection("users").doc(userId);
+
+    const doc = await userRef.get();
+
+    if (!doc.exists) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await userRef.update(updates);
 
     res.json({ message: "Profile updated successfully" });
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Update failed" });
+    console.error("UPDATE ERROR:", err);
+    res.status(500).json({
+      message: "Update failed",
+      error: err.message
+    });
   }
 });
 module.exports=router;
