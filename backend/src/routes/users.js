@@ -281,7 +281,6 @@ router.post("/forgot-password", async (req, res) => {
     res.status(500).json({ message: "Failed to send reset link" });
   }
 });
-const bcrypt = require("bcrypt");
 
 router.post("/reset-password", async (req, res) => {
   try {
