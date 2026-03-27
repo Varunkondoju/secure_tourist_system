@@ -50,7 +50,7 @@ router.post("/register", async (req, res) => {
       email,
       aadhaar,
       emergencyContact,
-      emergencyContactRelation:relationemergencyContactRelation || "",
+      Relation:relationemergencyContactRelation || "",
       password: hashedPassword,
       digitalId, // 🔥 IMPORTANT
       createdAt: new Date()
@@ -237,3 +237,66 @@ function generateDigitalId(aadhaar) {
   const random = Math.random().toString(36).substring(2, 6).toUpperCase();
   return `IND-${last4}-${random}`;
 }
+const nodemailer = require("nodemailer");
+
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const snapshot = await db.collection("users")
+      .where("email", "==", email)
+      .get();
+
+    if (snapshot.empty) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userDoc = snapshot.docs[0];
+
+    // Create reset token (simple)
+    const resetToken = userDoc.id;
+
+    const resetLink = `https://your-app/reset-password/${resetToken}`;
+
+    // Send email
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Reset Password",
+      text: `Click to reset: ${resetLink}`
+    });
+
+    res.json({ message: "Reset link sent to email" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to send reset link" });
+  }
+});
+const bcrypt = require("bcrypt");
+
+router.post("/reset-password", async (req, res) => {
+  try {
+    const { userId, newPassword } = req.body;
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await db.collection("users").doc(userId).update({
+      password: hashedPassword
+    });
+
+    res.json({ message: "Password updated successfully" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Reset failed" });
+  }
+});
