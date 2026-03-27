@@ -24,6 +24,7 @@ router.post("/sos", async (req, res) => {
     const userData = userDoc.data();
 
     const digitalId = userData.digitalId;
+    const preferredName = userData.preferredName;
 
     console.log("USER DATA:", userData);
     console.log("DIGITAL ID:", digitalId);
@@ -39,6 +40,7 @@ router.post("/sos", async (req, res) => {
     const sosRef = await db.collection("sos").add({
       userId,
       digitalId, // 🔥 store it
+      preferredName,
       location,
       status: "ACTIVE",
       createdAt: new Date()
