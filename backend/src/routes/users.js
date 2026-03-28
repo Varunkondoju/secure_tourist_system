@@ -15,16 +15,16 @@ function generateDigitalId(aadhaar) {
 router.post("/register", async (req, res) => {
   try {
     const {
-      preferredName,
+      fullName,
       phone,
       email,
       aadhaar,
       emergencyContact,
-      relationemergencyContactRelation,
+      relation,
       password
     } = req.body;
 
-    if (!email || !password || !aadhaar) {
+    if (!email || !password || !aadhaar || !fullName) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
@@ -43,28 +43,39 @@ router.post("/register", async (req, res) => {
     // 🆔 generate digital ID
     const digitalId = generateDigitalId(aadhaar);
 
-    // 💾 save user
-    const userRef = await db.collection("users").add({
-      preferredName,
-      phone,
+    // ✅ CLEAN DATA (NO undefined)
+    const userData = {
+      fullName,
+      phone: phone || "",
       email,
       aadhaar,
-      emergencyContact,
-      Relation:relationemergencyContactRelation || "",
+      emergencyContact: emergencyContact || "",
+      relation: relation || "",
       password: hashedPassword,
-      digitalId, // 🔥 IMPORTANT
+      digitalId,
       createdAt: new Date()
-    });
+    };
+
+    // 🔥 REMOVE undefined fields (VERY IMPORTANT)
+    Object.keys(userData).forEach(
+      key => userData[key] === undefined && delete userData[key]
+    );
+
+    // 💾 save user
+    const userRef = await db.collection("users").add(userData);
 
     res.json({
       message: "User registered",
       userId: userRef.id,
-      digitalId // 🔥 send back
+      digitalId
     });
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Register failed" });
+    console.error("REGISTER ERROR:", err);
+    res.status(500).json({
+      message: "Register failed",
+      error: err.message
+    });
   }
 });
 
