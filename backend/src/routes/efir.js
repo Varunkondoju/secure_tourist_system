@@ -52,5 +52,26 @@ router.get("/firs", async (req, res) => {
   }
 });
 
+const express = require("express");
+const router = express.Router();
+const { db } = require("../firebase");
+
+
+// ✅ GET ALL FIRs
+router.get("/firs", async (req, res) => {
+  try {
+    const snapshot = await db.collection("firs").get();
+
+    const firs = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    res.json(firs);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch FIRs" });
+  }
+});
 
 module.exports = router;

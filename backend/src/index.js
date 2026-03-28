@@ -18,7 +18,6 @@ app.use("/api/users", userRoutes);
 app.use("/api/emergency", emergencyRoutes);
 app.use("/api/efir",efirRoutes);
 app.use("/api/trips",tripRoutes);
-const efirRoutes = require("./routes/efir");
 app.use("/api", efirRoutes);
 
 
