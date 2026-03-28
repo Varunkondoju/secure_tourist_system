@@ -30,7 +30,7 @@ router.post("/create", async (req, res) => {
     console.log("👤 USER:", fullName, digitalId);
 
     // ✅ SAVE FIR (IMPORTANT: use SAME collection "firs")
-    const firRef = await db.collection("firs").add({
+    const firRef = await db.collection("efir").add({
       userId,
       fullName,
       digitalId,
@@ -57,7 +57,7 @@ router.post("/create", async (req, res) => {
 // ✅ GET ALL FIRs
 router.get("/firs", async (req, res) => {
   try {
-    const snapshot = await db.collection("firs").get();
+    const snapshot = await db.collection("efir").get();
 
     const firs = snapshot.docs.map(doc => ({
       id: doc.id,
