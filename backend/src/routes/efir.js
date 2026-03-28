@@ -30,9 +30,6 @@ router.post("/create", async (req, res) => {
     res.status(500).json({ message: "E-FIR failed" });//if not filled
   }
 });
-const express = require("express");
-const router = express.Router();
-const { db } = require("../firebase");
 
 
 // ✅ GET ALL FIRs
