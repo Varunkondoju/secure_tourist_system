@@ -25,6 +25,7 @@ router.post("/sos", async (req, res) => {
 
     const digitalId = userData.digitalId;
     const fullName = userData.fullName;
+    const phone = userData.phone;
 
     console.log("USER DATA:", userData);
     console.log("DIGITAL ID:", digitalId);
@@ -41,6 +42,7 @@ router.post("/sos", async (req, res) => {
       userId,
       digitalId, // 🔥 store it
       fullName,
+      phone,
       location,
       status: "ACTIVE",
       createdAt: new Date()
