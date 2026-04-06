@@ -2,3 +2,5 @@
 node_modules/
 firebase-key.json
 *.key
+__pycache__/
+*.pyc
