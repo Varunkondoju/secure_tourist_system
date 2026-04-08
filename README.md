@@ -66,24 +66,24 @@ git clone https://github.com/your-username/secure_tourist_system.git
 cd secure_tourist_system
 
 ### Backend
-cd backend
-npm install
-npm start
+- cd backend
+- npm install
+- npm start
 
 ### Mobile
-cd mobile
-flutter pub get
-flutter run
+- cd mobile
+- flutter pub get
+- flutter run
 
 ### Dashboard
-cd dashboard
-npm install
-npm start
+- cd dashboard
+- npm install
+- npm start
 
 ### ML API
-cd safety-api
-pip install -r requirements.txt
-python main.py
+- cd safety-api
+- pip install -r requirements.txt
+- python main.py
 
 ---
 
@@ -108,9 +108,9 @@ SECRET_KEY=your_secret
 
 ## 👨‍💻 Team Members
 
-- Your Name  
-- Member 2  
-- Member 3  
+- KONDOJU SRI SAI VARUN  
+- TILEKAR BINDU
+- LEVUDALA SANJANA     
 
 ---
 
