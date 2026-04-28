@@ -62,7 +62,7 @@ Machine Learning:
 ## ⚙️ Installation & Setup
 
 ### Clone Repository
-git clone https://github.com/your-username/secure_tourist_system.git
+git clone https://github.com/Varunkondoju/secure_tourist_system.git
 cd secure_tourist_system
 
 ### Backend
