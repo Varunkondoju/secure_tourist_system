@@ -1,133 +1,64 @@
-# 🌍 Secure Tourist System
+#  Secure Tourist System
 
-A comprehensive safety platform designed to protect tourists using modern technologies like mobile applications, backend APIs, and machine learning.
-
+Secure Tourist System is an AI-powered safety platform designed to enhance tourist security through real-time monitoring, emergency response, and intelligent risk prediction. The system combines a Flutter-based mobile application, a React police dashboard, a Node.js backend, and a FastAPI machine learning model to provide a complete smart safety ecosystem. Tourists can access features such as digital identity verification, live safety score prediction, trip management, navigation assistance, and one-tap SOS emergency alerts with real-time GPS tracking. On the administrative side, the police dashboard enables authorities to monitor SOS alerts, manage E-FIR reports, and track emergency situations in real time. The integrated machine learning model analyzes crime-related location data to predict area safety scores, helping users make safer travel decisions. By integrating AI, real-time databases, and location intelligence, the Secure Tourist System aims to create a smarter, safer, and more responsive tourism experience.
 ---
 
-## 🚀 Project Overview
+## Project Overview
 
-The **Secure Tourist System** is built to enhance tourist safety by providing emergency services, real-time alerts, and intelligent risk detection.
+-  Flutter Mobile App
+-  React Web Dashboard
+-  Node.js Backend
+-  Machine Learning Safety Prediction API
+-  Firebase Real-Time Database
 
-This system integrates:
-- 📱 Mobile Application (Flutter)
-- 🌐 Admin Dashboard (React)
-- 🔧 Backend API (Node.js)
-- 🤖 Machine Learning Safety API (Python)
+The system provides:
+- AI-based area safety score prediction
+- Real-time SOS alerts
+- E-FIR filing
+- Tourist digital identity
+- Police monitoring dashboard
+- Live emergency location tracking
 
----
+# 🚀 Key Features
 
-## ✨ Key Features
+## Tourist Mobile App
+-  Secure Login & Registration
+-  Digital Tourist ID
+-  One-Tap Emergency SOS
+-  Real-Time GPS Tracking
+-  AI Safety Score Prediction
+-  Trip Management
+-  Navigation Assistance
+-  Emergency Contacts
 
-- 🚨 SOS Emergency Alert
-- 📝 E-FIR System
-- 📍 Real-Time Location Tracking
-- 🔔 Live Notifications
-- 🤖 AI-Based Risk Detection
-- 🔗 Blockchain Logging (Optional)
+##  Police Dashboard
+-  Live SOS Monitoring
+-  E-FIR Management
+-  Police Response System
+-  Live Location Visualization
+-  Tourist Activity Tracking
+-  Real-Time Emergency Alerts
 
----
+##  AI Safety Prediction System
+-  Predicts area safety score using GPS coordinates
+-  Machine Learning model trained on crime datasets
+-  FastAPI-powered prediction API
+-  Real-time risk evaluation
 
-## 🏗️ Project Structure
+## Firebase Integration
 
-secure_tourist_system/
-│
-├── mobile/        
-├── backend/       
-├── dashboard/     
-├── safety-api/    
-│
-└── README.md
+The system uses Firebase for:
 
----
+- Authentication
+- Real-Time Database
+- Emergency Alerts
+- Live Tourist Tracking
 
-## 🛠️ Tech Stack
+## Future Enhancements
 
-Frontend:
-- Flutter
-- React.js
-
-Backend:
-- Node.js
-- Express.js
-
-Database:
-- Firebase
-
-Machine Learning:
-- Python
-- Scikit-learn
-
----
-
-## ⚙️ Installation & Setup
-
-### Clone Repository
-git clone https://github.com/Varunkondoju/secure_tourist_system.git
-cd secure_tourist_system
-
-### Backend
-- cd backend
-- npm install
-- npm start
-
-### Mobile
-- cd mobile
-- flutter pub get
-- flutter run
-
-### Dashboard
-- cd dashboard
-- npm install
-- npm start
-
-### ML API
-- cd safety-api
-- pip install -r requirements.txt
-- python main.py
-
----
-
-## 🔐 Environment Variables
-
-Create a `.env` file:
-
-FIREBASE_API_KEY=your_key  
-SECRET_KEY=your_secret  
-
-⚠️ Do not upload `.env` to GitHub
-
----
-
-## 📌 API Endpoints
-
-- POST /sos  
-- POST /efir  
-- GET /alerts  
-
----
-
-## 👨‍💻 Team Members
-
-- KONDOJU SRI SAI VARUN  
-- TILEKAR BINDU
-- LEVUDALA SANJANA     
-
----
-
-## 📄 License
-
-MIT License
-
----
-
-## 💡 Future Enhancements
-
-- Offline SOS
-- Multi-language support
-- Advanced AI prediction
-
----
-
-## ⭐ Conclusion
-
-A smart solution to improve tourist safety using modern technology.
+- Geofencing Alerts
+- Advanced Deep Learning Model
+- Multi-language Support
+- Offline Emergency Mode
+- Government Integration
+- Crime Heatmaps
